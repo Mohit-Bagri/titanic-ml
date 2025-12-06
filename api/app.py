@@ -5,9 +5,17 @@ import pandas as pd
 import os
 import json
 
-from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Titanic Survival Prediction API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # tighten later
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "model", "titanic_best_pipeline.joblib")
@@ -26,22 +34,13 @@ class TitanicInput(BaseModel):
 
 
 @app.get("/")
-def home():
-    return {"message": "Titanic Survival API is running"}
-
-
-@app.get("/ui")
-def ui():
-    PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    UI_PATH = os.path.join(PROJECT_ROOT, "docs", "index.html")
-    return FileResponse(UI_PATH)
+def health():
+    return {"status": "ok", "model": "titanic-logistic-regression"}
 
 
 @app.post("/predict")
 def predict(input_data: TitanicInput):
-    # ✅ CRITICAL FIX: NumPy → DataFrame with column names
     df = pd.DataFrame([input_data.data], columns=FEATURES)
-
     pred = model.predict(df)[0]
     proba = model.predict_proba(df)[0, 1]
 
