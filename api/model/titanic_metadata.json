@@ -1,0 +1,29 @@
+{
+    "features": [
+        "Pclass",
+        "Sex",
+        "Age",
+        "SibSp",
+        "Parch",
+        "Fare",
+        "Embarked"
+    ],
+    "numeric_features": [
+        "Age",
+        "SibSp",
+        "Parch",
+        "Fare"
+    ],
+    "categorical_features": [
+        "Pclass",
+        "Sex",
+        "Embarked"
+    ],
+    "model_type": "LogisticRegression",
+    "best_params": {
+        "model__C": 1
+    },
+    "cv_roc_auc": 0.8513981884591237,
+    "test_roc_auc": 0.8426877470355731,
+    "version": "1.0"
+}
